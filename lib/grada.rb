@@ -1,13 +1,17 @@
 require 'gnuplot'
 
 class Grada
+  class NotValidArrayError < RuntimeError; end
+  class NotValidDataError < RuntimeError; end
+  class NoPlotDataError < RuntimeError; end
+
   attr_reader :x
   attr_reader :y
 
   DEFAULT_OPTIONS = {width: 1600,
                      height: 400,
                      title: "Graph",
-                     x_label: "Time",
+                     x_label: "X",
                      y_label: "Y",
                      with: 'lines',
                      graph_type: :default}
@@ -18,26 +22,31 @@ class Grada
   end
   
   def initialize(x, y = nil)
-    @x = x
-    @y = y 
+    raise NoPlotDataError if ! y.nil? && x.size != y.size
+
+    @x = validate(x)
+    @y = y.nil? ? y : validate(y)  
   end
   
   def display(opts = {})
     @opts = DEFAULT_OPTIONS.merge(opts)
     
     if @opts[:graph_type] == :histogram
+      population_data?(@x)
+      
       plot_histogram do |plot|
         plot.set "terminal x11 size #{@opts[:width]},#{@opts[:height]}"
       end
     elsif @opts[:graph_type] == :heatmap
+      Matrix.columns(@x) rescue raise NoPlotDataError
       @opts[:with] = 'image'
-      plot_heat_map do |plot|
-      end
+      
+      plot_heat_map
     else
-      if ! @y.nil?
-        plot_and do |plot|
-          plot.set "terminal x11 size #{@opts[:width]},#{@opts[:height]}"
-        end
+      raise NoPlotDataError if @y.nil?
+      
+      plot_and do |plot|
+        plot.set "terminal x11 size #{@opts[:width]},#{@opts[:height]}"
       end
     end
   end
@@ -48,34 +57,54 @@ class Grada
     return nil if @opts[:filename].nil?
     
     if @opts[:graph_type] == :histogram
+      population_data?(@x)
+      
       plot_histogram do |plot|
         plot.output @opts[:filename]
         plot.set "terminal x11 size #{@opts[:width]},#{@opts[:height]}"
         plot.terminal 'png'
       end
     elsif @opts[:graph_type] == :heatmap
+      Matrix.columns(@x) rescue raise NoPlotDataError
       @opts[:with] = 'image'
+      
       plot_heat_map do |plot|
         plot.output @opts[:filename]
         plot.terminal 'png'
       end
     else
-      if ! @y.nil?
-        plot_and do |plot|
-          plot.output @opts[:filename]
-          plot.set "terminal x11 size #{@opts[:width]*10},#{@opts[:height]}"
-          plot.terminal 'png'
-        end
+      raise NoPlotDataError if @y.nil?
+      
+      plot_and do |plot|
+        plot.output @opts[:filename]
+        plot.set "terminal x11 size #{@opts[:width]*10},#{@opts[:height]}"
+        plot.terminal 'png'
       end
     end
   end
   
   private
- 
+  
+  def validate(l)
+    raise NotValidArrayError if ! l.is_a?(Array)
+
+    l.each do |elem|
+      raise NotValidDataError if ! ( elem.is_a?(Float) || elem.is_a?(Integer) || elem.is_a?(Array))
+    end
+  end
+  
+  def population_data?(l)
+    raise NotValidArrayError if ! l.is_a?(Array)
+
+    l.each do |elem|
+      raise NotValidDataError if ! ( elem.is_a?(Float) || elem.is_a?(Integer))
+    end
+  end
+  
   def plot_and(&block)
     Gnuplot.open do |gp|
       Gnuplot::Plot.new(gp) do |plot|
-        block[plot]
+        block[plot] if block
 
         plot.title @opts[:title]
         
@@ -92,7 +121,7 @@ class Grada
   def plot_histogram(&block)
     Gnuplot.open do |gp|
       Gnuplot::Plot.new(gp) do |plot|
-        block[plot]
+        block[plot] if block
 
         plot.title @opts[:title]
         
@@ -112,7 +141,7 @@ class Grada
   def plot_heat_map(&block)
     Gnuplot.open do |gp|
       Gnuplot::Plot.new(gp) do |plot|
-        block[plot]
+        block[plot] if block
         
         plot.set "pm3d map"
         plot.set "palette color"
@@ -124,7 +153,7 @@ class Grada
         plot.set "palette define"
        
         plot.title @opts[:title]
-        plot.data = [Gnuplot::DataSet.new(Matrix.columns(@x).transpose) do |ds|
+        plot.data = [Gnuplot::DataSet.new(Matrix.columns(@x)) do |ds|
           ds.with = @opts[:with] 
         end]
       end

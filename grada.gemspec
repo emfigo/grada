@@ -7,5 +7,9 @@ Gem::Specification.new do |s|
   s.authors        = ['Enrique Figuerola']
   s.email          = 'hard_rock15@msn.com'
   s.files          = ['lib/grada.rb']
+  s.require_paths  = ['lib']
   s.homepage       = 'http://rubygems.org/gems/grada'
+
+  s.add_development_dependency(%q<rspec>, [">= 2.11.0"])
+  s.add_development_dependency(%q<rake>, [">= 0"])
 end
