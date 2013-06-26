@@ -1,8 +1,16 @@
 require 'gnuplot'
 
 class Grada
+  # Not valid the format of the object to construct the graph
+  #
   class NotValidArrayError < RuntimeError; end
+
+  # Not valid the content of the array you're passing to build the graph
+  #
   class NotValidDataError < RuntimeError; end
+
+  # Can't build the plot
+  #
   class NoPlotDataError < RuntimeError; end
 
   attr_reader :x
@@ -16,10 +24,25 @@ class Grada
                      with: 'lines',
                      graph_type: :default}
   
-  
+  # Hello GraDA
+  #
+
   def self.hi
     puts "Hello GraDA"
   end
+    
+  # Initialize object with the data you want to plot. 
+  # It can vary depending on the type of graph.
+  # The second argument is optional.
+  #
+  # Example:
+  #   >> radiation_levels_median_per_day = [0.001,0.01,1,10,1000]
+  #   >> radiation_days = [0,1,2,3,4]
+  #   >> grada = Grada.new(radiation_days, radiation_levels_median_per_day)
+  #   => #<Grada:0x007f962a8dc9b8 @x=[0, 1, 2, 3, 4], @y=[0.001, 0.01, 1, 10, 1000]>
+  # Arguments:
+  #   x: (Array)
+  #   y: (Array) *optional*
   
   def initialize(x, y = nil)
     raise NoPlotDataError if ! y.nil? && x.size != y.size
@@ -27,7 +50,26 @@ class Grada
     @x = validate(x)
     @y = y.nil? ? y : validate(y)  
   end
-  
+ 
+  # Displays a graph in a window. 
+  # You can specify all the options that you need:
+  # *width* (Integer)
+  # *height* (Integer)
+  # *title* (Integer)
+  # *x_label* (String)
+  # *y_label* (String)
+  # *graph_type* (:histogram, :heatmap) default: :default
+  # *with* ('points', 'linespoints') default: 'lines'
+  #
+  #
+  # Example:
+  #   >> grada.display
+  #   => ""
+  #   >> grada.display({ title: 'Atomic Device X', x_label: 'Day', y_label: 'smSv', with: 'points' })
+  #   => ""
+  # Arguments:
+  #   opts: (Hash) *optional*
+
   def display(opts = {})
     @opts = DEFAULT_OPTIONS.merge(opts)
     
@@ -51,6 +93,15 @@ class Grada
     end
   end
 
+  # Save the graph in a png file. 
+  # You can specify all the options that you need as _display_ but also need to specify the file
+  #
+  # Example:
+  #   >> grada.save({ filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga.png' ,title: 'Atomic Device X', x_label: 'Day', y_label: 'smSv', with: 'points' }) 
+  #   => ""
+  # Arguments:
+  #   opts: (Hash) *optional*
+  
   def save(opts = {})
     @opts = DEFAULT_OPTIONS.merge(opts)
     
