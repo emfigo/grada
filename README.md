@@ -1,6 +1,7 @@
 GraDA
 =====
 Graphic Data Analysis Gem
+note: requires `X11` to display the plots
 
 GraDA lets you graph data so you can analyze it. This gem was created for data investigation purposes.
 
