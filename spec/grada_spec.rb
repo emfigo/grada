@@ -12,7 +12,7 @@ describe Grada do
 
     it "should not create a grada object without a list" do
       expect{ Grada.new({}) }.to raise_error(Grada::NotValidArrayError)
-      expect{ Grada.new(valid_x, {}) }.to raise_error(Grada::NoPlotDataError)
+      expect{ Grada.new(valid_x, {}) }.to raise_error(Grada::NotValidArrayError)
     end
     
     it "should not create a grada object with a list with strings" do
@@ -20,7 +20,7 @@ describe Grada do
     end
     
     it "should not create a grada object with two lists of different size" do
-      expect{ Grada.new(unvalid_population, []) }.to raise_error(Grada::NoPlotDataError)
+      expect{ Grada.new(unvalid_population, []) }.to raise_error(Grada::NotValidDataError)
     end
     
     it "should not create a grada object with a list with an unvalid list" do

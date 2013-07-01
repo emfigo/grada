@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name           = 'GraDA'
-  s.version        = '1.0.1'
+  s.version        = '1.1.0'
   s.date           = '2013-06-20'
   s.summary        = 'GraDa'
   s.description    = 'Graphic Data Analysis gem'

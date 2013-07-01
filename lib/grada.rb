@@ -45,7 +45,6 @@ class Grada
   #   y: (Array) *optional*
   
   def initialize(x, y = nil)
-    raise NoPlotDataError if ! y.nil? && x.size != y.size
 
     @x = validate(x)
     @y = y.nil? ? y : validate(y)  
@@ -140,7 +139,7 @@ class Grada
     raise NotValidArrayError if ! l.is_a?(Array)
 
     l.each do |elem|
-      raise NotValidDataError if ! ( elem.is_a?(Float) || elem.is_a?(Integer) || elem.is_a?(Array))
+      raise NotValidDataError if ! ( elem.is_a?(Float) || elem.is_a?(Integer) || elem.is_a?(Array) || elem.is_a?(Hash))
     end
   end
   
@@ -150,6 +149,18 @@ class Grada
     l.each do |elem|
       raise NotValidDataError if ! ( elem.is_a?(Float) || elem.is_a?(Integer))
     end
+  end
+  
+  def multiple_data?(l)
+    if l.is_a?(Array)
+      l.each do |elem|
+        return false if !  elem.is_a?(Hash)
+      end
+
+      return true
+    end
+    
+    false
   end
   
   def plot_and(&block)
@@ -162,8 +173,25 @@ class Grada
         plot.xlabel @opts[:x_label]
         plot.ylabel @opts[:y_label]
 
-        plot.data << Gnuplot::DataSet.new([@x,@y]) do |ds|
-          ds.with = @opts[:with] 
+        if multiple_data?(@y)
+          @y.each do |dic|
+            dic.each do |k, v|
+              if k.to_sym != :with
+                raise NoPlotDataError if ! v.nil? && @x.size != v.size
+            
+                plot.data << Gnuplot::DataSet.new([@x,v]) do |ds|
+                  ds.with = dic[:with] || @opts[:with]
+                  ds.title = "#{k}"
+                end
+              end
+            end
+          end
+        else
+          raise NoPlotDataError if ! @y.nil? && @x.size != @y.size
+          
+          plot.data << Gnuplot::DataSet.new([@x,@y]) do |ds|
+            ds.with = @opts[:with] 
+          end
         end
       end
     end

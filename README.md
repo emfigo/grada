@@ -1,7 +1,8 @@
 GraDA
 =====
 Graphic Data Analysis Gem
-note: requires `X11` to display the plots
+
+Note: requires `X11` to display the plots
 
 GraDA lets you graph data so you can analyze it. This gem was created for data investigation purposes.
 
@@ -72,6 +73,24 @@ grada.save({ filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_leve
 
 Also you can obtain more complex graphs. Here we will explain how to obtain most of them 
 
+### In order to create a default plot with multiple graphs. 
+
+```ruby
+class AtomicDevice
+  ...
+  radiation_days = [0,1,2,3,4]
+  radiation_levels_median_per_day = [{ malaga: [0.001,0.01,1,10,100], with: 'points' }, { granada: [1,10,100,100,1000] } ]
+  grada = Grada.new(radiation_days, radiation_levels_median_per_day)
+  ...
+end
+```
+
+* Just show
+
+```ruby
+grada.display({ title: 'Atomic Device X in 2 cities', x_label: 'Frecuency', y_label: 'smSv/day_one' })
+```
+
 ### In order to create a histogram for analyzing the distribution. 
 
 ```ruby
@@ -81,13 +100,17 @@ class AtomicDevice
   grada = Grada.new(radiation_levels_day_one)
   ...
 end
+```
 
 * Just show
 
+```ruby
 grada.display({ graph_type: :histogram, title: 'Atomic Device X', x_label: 'Frecuency', y_label: 'smSv/day_one' })
+```
 
 * Save plot
 
+```ruby
 grada.save({ filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga.png' ,graph_type: :histogram, title: 'Atomic Device X', x_label: 'Frecuency', y_label: 'smSv/day_one' })
 ```
 ### In order to create a heatmap for comparing and visualizing data.
@@ -100,15 +123,19 @@ class AtomicDevice
   grada = Grada.new(radiation_difference_between_devices)
   ...
 end
+```
 
 #It is important to specify the min and the max parameters, so you get a reasonable distribution of colors for the heatmap you want
 
 * Just show
 
+```ruby
 grada.display({ graph_type: :heatmap, title: 'Atomic Device Comparison', x_label: 'Difference', min: 0, max: 1})
+```
 
 * Save plot
 
+```ruby
 grada.save({ filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga.png' ,graph_type: :heatmap, title: 'Atomic Device Comparison', x_label: 'Difference', min: 0, max: 1})
 ```
 
