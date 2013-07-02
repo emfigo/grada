@@ -164,8 +164,8 @@ class Grada
   end
   
   def plot_and(&block)
-    Gnuplot.open do |gp|
-      Gnuplot::Plot.new(gp) do |plot|
+    ::Gnuplot.open do |gp|
+      ::Gnuplot::Plot.new(gp) do |plot|
         block[plot] if block
 
         plot.title @opts[:title]
@@ -179,7 +179,7 @@ class Grada
               if k.to_sym != :with
                 raise NoPlotDataError if ! v.nil? && @x.size != v.size
             
-                plot.data << Gnuplot::DataSet.new([@x,v]) do |ds|
+                plot.data << ::Gnuplot::DataSet.new([@x,v]) do |ds|
                   ds.with = dic[:with] || @opts[:with]
                   ds.title = "#{k}"
                 end
@@ -189,7 +189,7 @@ class Grada
         else
           raise NoPlotDataError if ! @y.nil? && @x.size != @y.size
           
-          plot.data << Gnuplot::DataSet.new([@x,@y]) do |ds|
+          plot.data << ::Gnuplot::DataSet.new([@x,@y]) do |ds|
             ds.with = @opts[:with] 
           end
         end
@@ -198,8 +198,8 @@ class Grada
   end
   
   def plot_histogram(&block)
-    Gnuplot.open do |gp|
-      Gnuplot::Plot.new(gp) do |plot|
+    ::Gnuplot.open do |gp|
+      ::Gnuplot::Plot.new(gp) do |plot|
         block[plot] if block
 
         plot.title @opts[:title]
@@ -210,7 +210,7 @@ class Grada
 
         x = @x.sort.group_by { |xi| xi }.map{|k,v| v.count }
         
-        plot.data << Gnuplot::DataSet.new(x) do |ds|
+        plot.data << ::Gnuplot::DataSet.new(x) do |ds|
           ds.with = @opts[:with] 
         end
       end
@@ -218,8 +218,8 @@ class Grada
   end
   
   def plot_heat_map(&block)
-    Gnuplot.open do |gp|
-      Gnuplot::Plot.new(gp) do |plot|
+    ::Gnuplot.open do |gp|
+      ::Gnuplot::Plot.new(gp) do |plot|
         block[plot] if block
         
         plot.set "pm3d map"
@@ -232,7 +232,7 @@ class Grada
         plot.set "palette define"
        
         plot.title @opts[:title]
-        plot.data = [Gnuplot::DataSet.new(Matrix.columns(@x)) do |ds|
+        plot.data = [::Gnuplot::DataSet.new(Matrix.columns(@x)) do |ds|
           ds.with = @opts[:with] 
         end]
       end
