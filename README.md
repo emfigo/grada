@@ -88,7 +88,7 @@ end
 * Just show
 
 ```ruby
-grada.display({ title: 'Atomic Device X in 2 cities', x_label: 'Frecuency', y_label: 'smSv/day_one' })
+grada.display({ title: 'Atomic Device X in 2 cities', x_label: 'Frequency', y_label: 'smSv/day_one' })
 ```
 
 ### In order to create a histogram for analyzing the distribution. 
@@ -105,13 +105,13 @@ end
 * Just show
 
 ```ruby
-grada.display({ graph_type: :histogram, title: 'Atomic Device X', x_label: 'Frecuency', y_label: 'smSv/day_one' })
+grada.display({ graph_type: :histogram, title: 'Atomic Device X', x_label: 'Frequency', y_label: 'smSv/day_one' })
 ```
 
 * Save plot
 
 ```ruby
-grada.save({ filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga.png' ,graph_type: :histogram, title: 'Atomic Device X', x_label: 'Frecuency', y_label: 'smSv/day_one' })
+grada.save({ filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga.png' ,graph_type: :histogram, title: 'Atomic Device X', x_label: 'Frequency', y_label: 'smSv/day_one' })
 ```
 ### In order to create a heatmap for comparing and visualizing data.
 
@@ -125,7 +125,7 @@ class AtomicDevice
 end
 ```
 
-#It is important to specify the min and the max parameters, so you get a reasonable distribution of colors for the heatmap you want
+### It is important to specify the min and the max parameters, so you get a reasonable distribution of colors for the heatmap you want
 
 * Just show
 
