@@ -49,7 +49,7 @@ class Gnuplot
 end
 
 class Plot
-  attr_accessor :cmd, :data, :settings, :arbitrary_lines
+  attr_accessor :cmd, :data, :settings, :styles, :arbitrary_lines
 
   QUOTED_METHODS = [ "title", "output", "xlabel", "x2label", "ylabel", "y2label", "clabel", "cblabel", "zlabel" ]
 
@@ -96,49 +96,52 @@ class Plot
     
     io
   end
+end
 
-  def style(&blk)
-    @styles << Style.new(&blk)
-  end
+class Style
+  attr_accessor :linestyle, :linetype, :linewidth, :linecolor, :pointtype, :pointsize, :fill, :index
 
-  class Style
-    attr_accessor :linestyle, :linetype, :linewidth, :linecolor, :pointtype, :pointsize, :fill, :index
+  alias :ls :linestyle 
+  alias :lt :linetype
+  alias :lw :linewidth
+  alias :lc :linecolor
+  alias :pt :pointtype
+  alias :ps :pointsize
+  alias :fs :fill
 
-    alias :ls :linestyle
-    alias :lt :linetype
-    alias :lw :linewidth
-    alias :lc :linecolor
-    alias :pt :pointtype
-    alias :ps :pointsize
-    alias :fs :fill
+  alias :ls= :linestyle= 
+  alias :lt= :linetype=
+  alias :lw= :linewidth=
+  alias :lc= :linecolor=
+  alias :pt= :pointtype=
+  alias :ps= :pointsize=
+  alias :fs= :fill=
+  
+  STYLES = [:ls, :lt, :lw, :lc, :pt, :ps, :fs]
 
-    STYLES = [:ls, :lt, :lw, :lc, :pt, :ps, :fs]
+ def self.increment_index
+   @index ||= 0
+   @index += 1
+ end
 
-   def self.increment_index
-     @index ||= 0
-     @index += 1
+ def initialize
+   STYLES.each do |style|
+     send("#{style}=", nil)
    end
 
-   def initialize
-     STYLES.each do |style|
-       send("#{style}=", nil)
-     end
+   yield self if block_given?
 
-     yield self if block_given?
+ end
 
-     self.increment_index
+ def to_s
+   str = ' '
+
+   STYLES.each do |style|
+     str += " #{style} #{send(style)}" if send(style) 
    end
 
-   def to_s
-     str = "set style line #{@index}"
-
-     STYLES.each do |style|
-       str += " #{send(style)} #{style}" if send(style) 
-     end
-
-     str
-   end
-  end
+   str == ' ' ? '' : str
+ end
 end
 
 class DataSet
@@ -168,7 +171,7 @@ class DataSet
 
   def plot_args(io = '')
     io += @data.is_a?(String) ? @data : "'-'"
-    io += " index #{@index}" if @index
+    #io += " index #{@index}" if @index
     io += " using #{@using}" if @using
     io += " axes #{@axes}" if @axes
     io += " title #{@title ? "\"#{@title}\"" : notitle}"
@@ -176,7 +179,7 @@ class DataSet
     io += " smooth  #{@smooth}" if @smooth
     io += " with #{@with}" if @with
     io += " linecolor #{@linecolor}" if @linecolor
-    io += " linewidth #{@linewidth}" if @linewidth
+    io += " line #{@index} linewidth #{@linewidth}" if @linewidth
     io += " linestyle #{@linestyle.index}" if @linestyle
     
     io

@@ -25,7 +25,7 @@ end
 grada.display
 
 #Saves the default plot into a file.
-grada.save({ filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga.png' })
+grada.save( filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga.png' )
 ```
 
 ## Basic Usage
@@ -34,36 +34,36 @@ You can modify the default graph properties in whichever way you want:
 
 ```ruby
 #For modifying the window width
-grada.display({ width: 1200 })
+grada.display( width: 1200 )
 
 #For modifying the window height
-grada.display({ height: 1240 })
+grada.display( height: 1240 )
 
 #For modifying the graph title
-grada.display({ title: 'Atomic Device X' })
+grada.display( title: 'Atomic Device X' )
 
 #For modifying the horizontal label from the graph
-grada.display({ x_label: 'Day' })
+grada.display( x_label: 'Day' )
 
 #For modifying the vertical label from the graph
-grada.display({ y_label: 'smSv' })
+grada.display( y_label: 'smSv' )
 
 #The type of graph you want. If you want the default you don't need to specify this parameter
 #The options are:
 # * :default
 # * :histogram
 # * :heatmap
-grada.display({ graph_type: :histogram })
+grada.display( graph_type: :histogram )
 
 #The type of line you want in the default graph. If you want a line you don't need to specify this parameter
 #The options are:
 # * 'lines'
 # * 'points' (scatter plot)
 # * 'linespoints'
-grada.display({ with: 'points' })
+grada.display( with: 'points' )
 
 #You can combine them all
-grada.display({ title: 'Atomic Device X', x_label: 'Day', y_label: 'smSv', with: 'points' })
+grada.display( title: 'Atomic Device X', x_label: 'Day', y_label: 'smSv', with: 'points' )
 
 #You can add this options when saving a file
 grada.save({ filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga.png' ,title: 'Atomic Device X', x_label: 'Day', y_label: 'smSv', with: 'points' })
@@ -88,7 +88,7 @@ end
 * Just show
 
 ```ruby
-grada.display({ title: 'Atomic Device X in 2 cities', x_label: 'Frequency', y_label: 'smSv/day_one' })
+grada.display( title: 'Atomic Device X in 2 cities', x_label: 'Frequency', y_label: 'smSv/day_one' )
 ```
 
 ### In order to create a histogram for analyzing the distribution. 
@@ -105,13 +105,13 @@ end
 * Just show
 
 ```ruby
-grada.display({ graph_type: :histogram, title: 'Atomic Device X', x_label: 'Frequency', y_label: 'smSv/day_one' })
+grada.display( graph_type: :histogram, title: 'Atomic Device X', x_label: 'Frequency', y_label: 'smSv/day_one' )
 ```
 
 * Save plot
 
 ```ruby
-grada.save({ filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga.png' ,graph_type: :histogram, title: 'Atomic Device X', x_label: 'Frequency', y_label: 'smSv/day_one' })
+grada.save( filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga.png' ,graph_type: :histogram, title: 'Atomic Device X', x_label: 'Frequency', y_label: 'smSv/day_one' )
 ```
 ### In order to create a heatmap for comparing and visualizing data.
 
@@ -130,12 +130,12 @@ end
 * Just show
 
 ```ruby
-grada.display({ graph_type: :heatmap, title: 'Atomic Device Comparison', x_label: 'Difference', min: 0, max: 1})
+grada.display( graph_type: :heatmap, title: 'Atomic Device Comparison', x_label: 'Difference', min: 0, max: 1)
 ```
 
 * Save plot
 
 ```ruby
-grada.save({ filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga.png' ,graph_type: :heatmap, title: 'Atomic Device Comparison', x_label: 'Difference', min: 0, max: 1})
+grada.save( filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga.png' ,graph_type: :heatmap, title: 'Atomic Device Comparison', x_label: 'Difference', min: 0, max: 1)
 ```
 

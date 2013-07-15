@@ -23,6 +23,8 @@ class Grada
                      y_label: "Y",
                      with: 'lines',
                      graph_type: :default}
+
+  STYLES = [:linestyle, :linetype, :linewidth, :linecolor, :pointtype, :pointsize, :fill]
   
   # Hello GraDA
   #
@@ -174,13 +176,21 @@ class Grada
         plot.ylabel @opts[:y_label]
   
         if multiple_data?(@y)
-          @y.each do |dic|
+          @y.each_with_index do |dic, index|
             dic.each do |k, v|
-              if k.to_sym != :with
+              if ! STYLES.include?(k.to_sym) && k.to_sym != :with
                 raise NoPlotDataError if ! v.nil? && @x.size != v.size
             
+                style = Gnuplot::Style.new do |ds|
+                  ds.index = index
+                  STYLES.each do |style|
+                    ds.send("#{style}=", dic[style]) if dic[style]
+                  end
+                end.to_s
+
                 plot.data << Gnuplot::DataSet.new([@x,v]) do |ds|
                   ds.with = dic[:with] || @opts[:with]
+                  ds.with += style
                   ds.title = "#{k}"
                 end
               end
