@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name           = 'grada'
-  s.version        = '2.1.3'
+  s.version        = '2.1.5'
   s.date           = '2013-06-20'
   s.summary        = 'GraDA'
   s.license        = 'MIT'

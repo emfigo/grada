@@ -215,16 +215,8 @@ class Grada
         else
           raise NoPlotDataError if ! @y.nil? && @x.size != @y.size
           
-          style = Gnuplot::Style.new do |ds|
-            ds.index = index
-            STYLES.each do |style|
-              ds.send("#{style}=", dic[style]) if dic[style]
-            end
-          end.to_s
-          
           plot.data << Gnuplot::DataSet.new([@x,@y]) do |ds|
             ds.with = @opts[:with] 
-            ds.with += style
           end
         end
       end
@@ -249,16 +241,8 @@ class Grada
         plot.set "xtics #{@x.min},#{(@x.max-@x.min)/5},#{@x.max}"
         plot.set "tics out nomirror"
 
-        style = Gnuplot::Style.new do |ds|
-          ds.index = index
-          STYLES.each do |style|
-            ds.send("#{style}=", dic[style]) if dic[style]
-          end
-        end.to_s
-          
         plot.data << Gnuplot::DataSet.new(@x) do |ds|
           ds.with = 'boxes'
-          ds.with += style
           ds.title = @opts[:x_label]
           ds.using = '($1):(1.0)'
           ds.smooth = 'freq'
