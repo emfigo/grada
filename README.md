@@ -66,7 +66,7 @@ grada.display( with: 'points' )
 grada.display( title: 'Atomic Device X', x_label: 'Day', y_label: 'smSv', with: 'points' )
 
 #You can add this options when saving a file
-grada.save({ filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga.png' ,title: 'Atomic Device X', x_label: 'Day', y_label: 'smSv', with: 'points' })
+grada.save( filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga.png' ,title: 'Atomic Device X', x_label: 'Day', y_label: 'smSv', with: 'points' )
 ```
 
 ## Advance Usage
@@ -79,7 +79,7 @@ Also you can obtain more complex graphs. Here we will explain how to obtain most
 class AtomicDevice
   ...
   radiation_days = [0,1,2,3,4]
-  radiation_levels_median_per_day = [{ malaga: [0.001,0.01,1,10,100], with: 'points' }, { granada: [1,10,100,100,1000] } ]
+  radiation_levels_median_per_day = [{ malaga: [0.001,0.01,1,10,100], with: 'points', linewidth: '3' }, { granada: [1,10,100,100,1000] } ]
   grada = Grada.new(radiation_days, radiation_levels_median_per_day)
   ...
 end
