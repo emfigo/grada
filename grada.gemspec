@@ -3,6 +3,7 @@ Gem::Specification.new do |s|
   s.version        = '2.0.1'
   s.date           = '2013-06-20'
   s.summary        = 'GraDA'
+  s.license        = 'MIT'
   s.description    = 'Graphic Data Analysis gem'
   s.authors        = ['Enrique Figuerola']
   s.email          = 'hard_rock15@msn.com'
