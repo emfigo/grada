@@ -24,7 +24,16 @@ class Grada
                      with: 'lines',
                      graph_type: :default}
 
+  #All styles you can specify for the plots
+  #
   STYLES = [:linestyle, :linetype, :linewidth, :linecolor, :pointtype, :pointsize, :fill]
+ 
+  #Graph offsets
+  #
+  LEFT   =  0.25
+  RIGHT  =  0.25
+  TOP    =  0.25
+  BOTTOM =  0.25
   
   # Hello GraDA
   #
@@ -78,17 +87,21 @@ class Grada
       
       plot_histogram do |plot|
         plot.set "terminal x11 size #{@opts[:width]},#{@opts[:height]}"
+        plot.set "offset graph #{LEFT},#{RIGHT},#{TOP},#{BOTTOM}"
       end
     elsif @opts[:graph_type] == :heatmap
       Matrix.columns(@x) rescue raise NoPlotDataError
       @opts[:with] = 'image'
       
-      plot_heat_map
+      plot_heat_map do |plot|
+        plot.set "offset graph #{LEFT},#{RIGHT},#{TOP},#{BOTTOM}"
+      end
     else
       raise NoPlotDataError if @y.nil?
       
       plot_and do |plot|
         plot.set "terminal x11 size #{@opts[:width]},#{@opts[:height]}"
+        plot.set "offset graph #{LEFT},#{RIGHT},#{TOP},#{BOTTOM}"
       end
     end
   end
@@ -114,6 +127,7 @@ class Grada
         plot.output @opts[:filename]
         plot.set "terminal png size #{@opts[:width]}, #{@opts[:height]} crop"
         plot.terminal 'png'
+        plot.set "offset graph #{LEFT},#{RIGHT},#{TOP},#{BOTTOM}"
       end
     elsif @opts[:graph_type] == :heatmap
       Matrix.columns(@x) rescue raise NoPlotDataError
@@ -123,6 +137,7 @@ class Grada
         plot.output @opts[:filename]
         plot.set "terminal png size #{@opts[:width]}, #{@opts[:height]} crop"
         plot.terminal 'png'
+        plot.set "offset graph #{LEFT},#{RIGHT},#{TOP},#{BOTTOM}"
       end
     else
       raise NoPlotDataError if @y.nil?
@@ -131,6 +146,7 @@ class Grada
         plot.output @opts[:filename]
         plot.set "terminal png size #{@opts[:width]}, #{@opts[:height]} crop"
         plot.terminal 'png'
+        plot.set "offset graph #{LEFT},#{RIGHT},#{TOP},#{BOTTOM}"
       end
     end
   end
@@ -199,8 +215,16 @@ class Grada
         else
           raise NoPlotDataError if ! @y.nil? && @x.size != @y.size
           
+          style = Gnuplot::Style.new do |ds|
+            ds.index = index
+            STYLES.each do |style|
+              ds.send("#{style}=", dic[style]) if dic[style]
+            end
+          end.to_s
+          
           plot.data << Gnuplot::DataSet.new([@x,@y]) do |ds|
             ds.with = @opts[:with] 
+            ds.with += style
           end
         end
       end
@@ -211,17 +235,33 @@ class Grada
     Gnuplot.open do |gp|
       Gnuplot::Plot.new(gp) do |plot|
         block[plot] if block
+        
+        width = ( @x.max - @x.min ) / @x.size
   
         plot.title @opts[:title]
         
         plot.set "style data histogram"
         plot.xlabel @opts[:x_label]
-        plot.ylabel "Frecuency"
-  
-        x = @x.sort.group_by { |xi| xi }.map{|k,v| v.count }
-        
-        plot.data << Gnuplot::DataSet.new(x) do |ds|
-          ds.with = @opts[:with] 
+        plot.ylabel "Frequency"
+        plot.set "style fill solid 0.5"
+        plot.set "xrange [#{@x.min}:#{@x.max}]"
+        plot.set "boxwidth #{ width * 0.4}"
+        plot.set "xtics #{@x.min},#{(@x.max-@x.min)/5},#{@x.max}"
+        plot.set "tics out nomirror"
+
+        style = Gnuplot::Style.new do |ds|
+          ds.index = index
+          STYLES.each do |style|
+            ds.send("#{style}=", dic[style]) if dic[style]
+          end
+        end.to_s
+          
+        plot.data << Gnuplot::DataSet.new(@x) do |ds|
+          ds.with = 'boxes'
+          ds.with += style
+          ds.title = @opts[:x_label]
+          ds.using = '($1):(1.0)'
+          ds.smooth = 'freq'
         end
       end
     end
