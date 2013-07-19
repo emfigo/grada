@@ -3,8 +3,8 @@ GraDA
 Graphic Data Analysis Gem
 
 ### Note:
-# * Requires `X11` to display the plots
-# * Use 'grada' gem. _'GraDA'_ gem is deprecated. (gem install grada)
+#### * Requires `X11` to display the plots
+#### * Use 'grada' gem. 'GraDA' gem is deprecated. (gem install grada)
 
 GraDA lets you graph data so you can analyze it. This gem was created for data investigation purposes.
 
