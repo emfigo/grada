@@ -1,6 +1,8 @@
+[![Build Status](https://api.travis-ci.org/emfigo/grada.png)](https://api.travis-ci.org/emfigo/grada)
+
 GraDA
 =====
-Graphic Data Analysis Gem
+GraDA is a gem build for making easier the way we build graphs in ruby. GraDA is used mainly for data analysis purposes.
 
 ### Note:
 #### * Requires `X11` to display the plots
@@ -68,7 +70,7 @@ grada.display( with: 'points' )
 grada.display( title: 'Atomic Device X', x_label: 'Day', y_label: 'smSv', with: 'points' )
 
 #You can add this options when saving a file
-grada.save( filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga.png' ,title: 'Atomic Device X', x_label: 'Day', y_label: 'smSv', with: 'points' )
+grada.save( filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga', ext: 'png' ,title: 'Atomic Device X', x_label: 'Day', y_label: 'smSv', with: 'points' )
 ```
 
 ## Advance Usage
@@ -93,6 +95,8 @@ end
 grada.display( title: 'Atomic Device X in 2 cities', x_label: 'Frequency', y_label: 'smSv/day_one' )
 ```
 
+![Default graph](https://raw.github.com/emfigo/grada/master/assets/default_plot.png)
+
 ### In order to create a histogram for analyzing the distribution. 
 
 ```ruby
@@ -109,6 +113,8 @@ end
 ```ruby
 grada.display( graph_type: :histogram, title: 'Atomic Device X', x_label: 'Frequency', y_label: 'smSv/day_one' )
 ```
+
+![Default graph](https://raw.github.com/emfigo/grada/master/assets/histogram.png)
 
 * Save plot
 
@@ -135,9 +141,11 @@ end
 grada.display( graph_type: :heatmap, title: 'Atomic Device Comparison', x_label: 'Difference', min: 0, max: 1)
 ```
 
+![Default graph](https://raw.github.com/emfigo/grada/master/assets/heatmap.png)
+
 * Save plot
 
 ```ruby
-grada.save( filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga.png' ,graph_type: :heatmap, title: 'Atomic Device Comparison', x_label: 'Difference', min: 0, max: 1)
+grada.save( filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga', ext: 'svg' ,graph_type: :heatmap, title: 'Atomic Device Comparison', x_label: 'Difference', min: 0, max: 1)
 ```
 
