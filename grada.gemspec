@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name           = 'grada'
-  s.version        = '2.2.0'
+  s.version        = '2.2.1'
   s.date           = '2013-06-20'
   s.summary        = 'GraDA'
   s.license        = 'MIT'
@@ -11,7 +11,6 @@ Gem::Specification.new do |s|
   s.require_paths  = ['lib']
   s.homepage       = 'https://github.com/emfigo/grada'
 
-  s.add_dependency('magritte')
   s.add_development_dependency(%q<rspec>, [">= 2.11.0"])
   s.add_development_dependency(%q<rake>, [">= 0"])
 end

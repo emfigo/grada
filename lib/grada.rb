@@ -1,3 +1,5 @@
+$:.unshift File.expand_path('..', __FILE__)
+
 require_relative 'grada/gnuplot'
 
 class Grada
@@ -98,6 +100,7 @@ class Grada
     
     if @opts[:graph_type] == :histogram
       population_data?(@x)
+      return nil if @x.empty?
       
       plot_histogram do |plot|
         plot.set "terminal x11 size #{@opts[:width]},#{@opts[:height]}"
@@ -144,6 +147,7 @@ class Grada
     
     if @opts[:graph_type] == :histogram
       population_data?(@x)
+      return nil if @x.empty?
       
       plot_histogram do |plot|
         plot.output "#{@opts[:filename]}.#{ext}" 
@@ -244,7 +248,7 @@ class Grada
   def plot_histogram(&block)
     Gnuplot.open do
       Gnuplot::Plot.construct do |plot|
-        block.call plot if block
+        block.call plot if block 
         
         width = ( @x.max - @x.min ) / @x.size
   
