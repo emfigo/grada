@@ -1,4 +1,5 @@
 require 'matrix'
+require 'open3'
 
 class NoGnuPlotExecutableFound < RuntimeError; end 
 
@@ -26,25 +27,33 @@ class Gnuplot
     nil
   end
   
-  def self.gnuplot(persist)
+  def self.gnuplot
     gnu_exec = find_exec( ENV['RB_GNUPLOT'] || 'gnuplot' )
-
     raise NoGnuPlotExecutableFound unless gnu_exec
-
-    "#{gnu_exec} #{'-persist' if persist}"
+    gnu_exec
   end
 
-  def self.open(persist = true)
-    output = nil
-    gnuplot_cmd = gnuplot(persist)
+  def self.open(persist = true, &block)
+    gnuplot_cmd = gnuplot
 
-    IO::popen( gnuplot_cmd, 'w+' ) do |io|
-      yield io
-      io.close_write
-      output = io.read
+    commands = yield
+
+    output = StringIO.new
+    Open3::popen3(gnuplot_cmd, '-persist') do |data_in, data_out, stderr, wait_th|
+      data_in << commands[:plot_settings]
+      data_in << commands[:plot_data]
+
+      data_in.flush
+      sleep 1
+      
+      while true do
+        window = IO::popen('xprop -name "Gnuplot" WM_NAME 2>/dev/null').gets
+        break unless window
+        sleep 1
+      end
     end
-
-    output
+    
+    output.string
   end
 end
 
@@ -53,18 +62,19 @@ class Plot
 
   QUOTED_METHODS = [ "title", "output", "xlabel", "x2label", "ylabel", "y2label", "clabel", "cblabel", "zlabel" ]
 
-  def initialize(io = nil, cmd = 'plot')
-    @cmd = cmd
+  def initialize
     @settings = []
     @arbitrary_lines = []
     @data = []
     @styles = []
-    yield self if block_given?
+  end
 
-    if io
-      io << to_gplot
-      io << store_datasets
-    end
+  def self.construct(&block)
+    plot = new
+    
+    block.call plot if block_given?
+    
+    { plot_settings: plot.to_gplot, plot_data:  plot.store_datasets }
   end
 
   def method_missing(meth, *args)
@@ -90,8 +100,8 @@ class Plot
 
   def store_datasets(io = '')
     if @data.size > 0
-      io +=  @cmd + " #{ @data.map { |element| element.plot_args }.join(', ') } \n" 
-      io += @data.map { |ds| ds.to_gplot }.compact.join("e\n")
+      io +=  'plot' + " #{ @data.map { |element| element.plot_args }.join(', ') } \n" 
+      io += @data.map { |ds| ds.to_gplot }.compact.join("\n") + "\n"
     end
     
     io
@@ -199,7 +209,7 @@ class Array
       self.each { |elem| series_for_plot += "#{elem}\n" }
       series_for_plot + 'e'
     else
-      self[0].zip(self[1]).map{ |elem| elem.join(' ') }.join("\n") + "\ne"
+      self[0].zip(self[1]).map{ |elem| elem.join(' ') }.join("\n") + "\ne\n"
     end
   end
   

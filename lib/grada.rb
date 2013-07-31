@@ -1,4 +1,4 @@
-require 'grada/gnuplot'
+require_relative 'grada/gnuplot'
 
 class Grada
   # Not valid the format of the object to construct the graph
@@ -30,10 +30,10 @@ class Grada
  
   #Graph offsets
   #
-  LEFT   =  0.25
-  RIGHT  =  0.25
-  TOP    =  0.25
-  BOTTOM =  0.25
+  LEFT   =  0.05
+  RIGHT  =  0.05
+  TOP    =  0.05
+  BOTTOM =  0.05
   
   # Hello GraDA
   #
@@ -60,7 +60,7 @@ class Grada
     @y = y.nil? ? y : validate(y)  
   end
   
-  # Displays a graph in a window. 
+  # Displays a graph in a X11 window. 
   # You can specify all the options that you need:
   # *width* (Integer)
   # *height* (Integer)
@@ -70,6 +70,20 @@ class Grada
   # *graph_type* (:histogram, :heatmap) default: :default
   # *with* ('points', 'linespoints') default: 'lines'
   #
+  # Also is important to know that you can interact with the graph:
+  # * Zoom in                 =>  right click and drag the mouse to cover the area you want 
+  #                               or 
+  #                               use the scroll wheel
+  # 
+  # * Zoom out                =>  press key 'a'
+  #                               or
+  #                               if you want to go back to a previous state of zoom press key 'p'
+  #
+  #  * Exit interactive mode  =>  press key 'q'
+  #                               or
+  #                               just close the window
+  #
+  #  * Save image             =>  working on it 
   #
   # Example:
   #   >> grada.display
@@ -94,6 +108,7 @@ class Grada
       @opts[:with] = 'image'
       
       plot_heat_map do |plot|
+        plot.set "terminal x11 size #{@opts[:width]},#{@opts[:height]}"
         plot.set "offset graph #{LEFT},#{RIGHT},#{TOP},#{BOTTOM}"
       end
     else
@@ -107,10 +122,15 @@ class Grada
   end
   
   # Save the graph in a png file. 
-  # You can specify all the options that you need as _display_ but also need to specify the file
+  # You can specify all the options that you need as _display_ but also need to specify the file root-name and extension.
+  # The possible extensions you can use for saving a file are:
+  #  *png*
+  #  *gif*
+  #  *jpeg*
+  #  *svg* => default
   #
   # Example:
-  #   >> grada.save({ filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga.png' ,title: 'Atomic Device X', x_label: 'Day', y_label: 'smSv', with: 'points' }) 
+  #   >> grada.save({ filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga', ext: 'png' ,title: 'Atomic Device X', x_label: 'Day', y_label: 'smSv', with: 'points' }) 
   #   => ""
   # Arguments:
   #   opts: (Hash) *optional*
@@ -119,14 +139,15 @@ class Grada
     @opts = DEFAULT_OPTIONS.merge(opts)
     
     return nil if @opts[:filename].nil?
+
+    ext = @opts[:ext] || 'svg'
     
     if @opts[:graph_type] == :histogram
       population_data?(@x)
       
       plot_histogram do |plot|
-        plot.output @opts[:filename]
-        plot.set "terminal png size #{@opts[:width]}, #{@opts[:height]} crop"
-        plot.terminal 'png'
+        plot.output "#{@opts[:filename]}.#{ext}" 
+        plot.set "terminal #{ext} size #{@opts[:width]}, #{@opts[:height]} crop"
         plot.set "offset graph #{LEFT},#{RIGHT},#{TOP},#{BOTTOM}"
       end
     elsif @opts[:graph_type] == :heatmap
@@ -134,18 +155,15 @@ class Grada
       @opts[:with] = 'image'
       
       plot_heat_map do |plot|
-        plot.output @opts[:filename]
-        plot.set "terminal png size #{@opts[:width]}, #{@opts[:height]} crop"
-        plot.terminal 'png'
-        plot.set "offset graph #{LEFT},#{RIGHT},#{TOP},#{BOTTOM}"
+        plot.output "#{@opts[:filename]}.#{ext}" 
+        plot.set "terminal #{ext} size #{@opts[:width]}, #{@opts[:height]} crop"
       end
     else
       raise NoPlotDataError if @y.nil?
       
       plot_and do |plot|
-        plot.output @opts[:filename]
-        plot.set "terminal png size #{@opts[:width]}, #{@opts[:height]} crop"
-        plot.terminal 'png'
+        plot.output "#{@opts[:filename]}.#{ext}" 
+        plot.set "terminal #{ext} size #{@opts[:width]}, #{@opts[:height]} crop"
         plot.set "offset graph #{LEFT},#{RIGHT},#{TOP},#{BOTTOM}"
       end
     end
@@ -182,9 +200,9 @@ class Grada
   end
   
   def plot_and(&block)
-    Gnuplot.open do |gp|
-      Gnuplot::Plot.new(gp) do |plot|
-        block[plot] if block
+    Gnuplot.open do
+      Gnuplot::Plot.construct do |plot|
+        block.call plot if block
   
         plot.title @opts[:title]
         
@@ -224,9 +242,9 @@ class Grada
   end
   
   def plot_histogram(&block)
-    Gnuplot.open do |gp|
-      Gnuplot::Plot.new(gp) do |plot|
-        block[plot] if block
+    Gnuplot.open do
+      Gnuplot::Plot.construct do |plot|
+        block.call plot if block
         
         width = ( @x.max - @x.min ) / @x.size
   
@@ -237,7 +255,7 @@ class Grada
         plot.ylabel "Frequency"
         plot.set "style fill solid 0.5"
         plot.set "xrange [#{@x.min}:#{@x.max}]"
-        plot.set "boxwidth #{ width * 0.4}"
+        plot.set "boxwidth #{ width * 0.1}"
         plot.set "xtics #{@x.min},#{(@x.max-@x.min)/5},#{@x.max}"
         plot.set "tics out nomirror"
 
@@ -252,9 +270,9 @@ class Grada
   end
   
   def plot_heat_map(&block)
-    Gnuplot.open do |gp|
-      Gnuplot::Plot.new(gp) do |plot|
-        block[plot] if block
+    Gnuplot.open do
+      Gnuplot::Plot.construct do |plot|
+        block.call plot if block
         
         plot.set "pm3d map"
         plot.set "palette color"
