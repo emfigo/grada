@@ -57,7 +57,7 @@ class Gnuplot
   end
 end
 
-class Plot
+class Gnuplot::Plot
   attr_accessor :cmd, :data, :settings, :styles, :arbitrary_lines
 
   QUOTED_METHODS = [ "title", "output", "xlabel", "x2label", "ylabel", "y2label", "clabel", "cblabel", "zlabel" ]
@@ -108,7 +108,7 @@ class Plot
   end
 end
 
-class Style
+class Gnuplot::Style
   attr_accessor :linestyle, :linetype, :linewidth, :linecolor, :pointtype, :pointsize, :fill, :index
 
   alias :ls :linestyle 
@@ -154,7 +154,7 @@ class Style
  end
 end
 
-class DataSet
+class Gnuplot::DataSet
   attr_accessor :title, :with, :using, :data, :linewidth, :linecolor, :matrix, :smooth, :axes, :index, :linestyle
 
   alias :ls :linestyle
