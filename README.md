@@ -119,7 +119,7 @@ grada.display( graph_type: :histogram, title: 'Atomic Device X', x_label: 'Frequ
 * Save plot
 
 ```ruby
-grada.save( filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga.png' ,graph_type: :histogram, title: 'Atomic Device X', x_label: 'Frequency', y_label: 'smSv/day_one' )
+grada.save( filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga', ext: 'png' ,graph_type: :histogram, title: 'Atomic Device X', x_label: 'Frequency', y_label: 'smSv/day_one' )
 ```
 ### In order to create a heatmap for comparing and visualizing data.
 
