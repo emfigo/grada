@@ -51,6 +51,11 @@ class Gnuplot
         break unless window
         sleep 1
       end
+      data_in.close
+      data_out.close
+      stderr.close
+
+      output.write(wait_th.value.exitstatus)
     end
     
     output.string
