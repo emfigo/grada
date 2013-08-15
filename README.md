@@ -21,7 +21,7 @@ class AtomicDevice
   ...
   radiation_levels_median_per_day = [0.001,0.01,1,10,1000]
   radiation_days = [0,1,2,3,4]
-  grada = Grada.new(radiation_days, radiation_levels_median_per_day)
+  grada = Grada::Graph.new(radiation_days, radiation_levels_median_per_day)
   ...
 end
 
@@ -84,7 +84,7 @@ class AtomicDevice
   ...
   radiation_days = [0,1,2,3,4]
   radiation_levels_median_per_day = [{ malaga: [0.001,0.01,1,10,100], with: 'points', linewidth: '3' }, { granada: [1,10,100,100,1000] } ]
-  grada = Grada.new(radiation_days, radiation_levels_median_per_day)
+  grada = Grada::Graph.new(radiation_days, radiation_levels_median_per_day)
   ...
 end
 ```
@@ -95,7 +95,7 @@ end
 grada.display( title: 'Atomic Device X in 2 cities', x_label: 'Frequency', y_label: 'smSv/day_one' )
 ```
 
-![Default graph](https://raw.github.com/emfigo/grada/master/assets/default_plot.png)
+![Default graph](https://raw.github.com/emfigo/grada/master/assets/images/default_plot.png)
 
 ### In order to create a histogram for analyzing the distribution. 
 
@@ -103,7 +103,7 @@ grada.display( title: 'Atomic Device X in 2 cities', x_label: 'Frequency', y_lab
 class AtomicDevice
   ...
   radiation_levels_day_one = [0.001,0.01,1,0.001,0.001, 0.01, 0.01, 1, 0.01, 1, 0.01, 0.001, 0.001, 0.001, 0.001]
-  grada = Grada.new(radiation_levels_day_one)
+  grada = Grada::Graph.new(radiation_levels_day_one)
   ...
 end
 ```
@@ -114,7 +114,7 @@ end
 grada.display( graph_type: :histogram, title: 'Atomic Device X', x_label: 'Frequency', y_label: 'smSv/day_one' )
 ```
 
-![Default graph](https://raw.github.com/emfigo/grada/master/assets/histogram.png)
+![Default graph](https://raw.github.com/emfigo/grada/master/assets/images/histogram.png)
 
 * Save plot
 
@@ -128,7 +128,7 @@ class AtomicDevice
   ...
   devices = { 0 => 'Device X', 1 => 'Device Y', 2 => 'Device Z' }
   radiation_difference_between_devices = [[0, 1000, 0.01],[1000, 0, 0.1],[0.01, 0.1, 0]]
-  grada = Grada.new(radiation_difference_between_devices)
+  grada = Grada::Graph.new(radiation_difference_between_devices)
   ...
 end
 ```
@@ -141,7 +141,7 @@ end
 grada.display( graph_type: :heatmap, title: 'Atomic Device Comparison', x_label: 'Difference', min: 0, max: 1)
 ```
 
-![Default graph](https://raw.github.com/emfigo/grada/master/assets/heatmap.png)
+![Default graph](https://raw.github.com/emfigo/grada/master/assets/images/heatmap.png)
 
 * Save plot
 
