@@ -1,0 +1,33 @@
+.grada_main { 
+  width: 100%;
+  height: 100%;
+  float: left;
+}
+
+.grada_body {
+  width: 100%;
+  height: 740px;
+  clear: both;
+  padding-left: 150px;
+}
+
+.grada_body #grada_graph {
+  width: 1080px;
+  height: 740px;
+}
+
+.grada_panel {
+  width: 100%;
+  height: 10%;
+  padding-left: 20px;
+  clear: both;
+}
+
+#reset {
+  background-image: url('https://raw.github.com/emfigo/grada/master/assets/images/zoom.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  padding-left: 20px;
+  cursor: pointer;
+  clear: both;
+}

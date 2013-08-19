@@ -1,9 +1,5 @@
 module Grada
-  #All styles you can specify for the plots
-  #
-  STYLES = [:linestyle, :linetype, :linewidth, :linecolor, :pointtype, :pointsize, :fill]
-   
-  class Default
+  class Default < DefaultBase
     def self.plot(x, y, opts, &block)
       Gnuplot.open do
         Gnuplot::Plot.construct do |plot|
@@ -46,18 +42,21 @@ module Grada
       end
     end
     
-    private
+    def self.plot_html(x, y, opts)
+      opts[:filename] = create_html_dir(opts[:filename])
 
-    def self.multiple_data?(l)
-      if l.is_a?(Array)
-        l.each do |elem|
-          return false if !  elem.is_a?(Hash)
-        end
-    
-        return true
+      create_grada_json(opts, x, y)
+
+      File.open("#{opts[:filename]}.html",'w') do |f|
+        f << html_head
+        f << "<body>\n"
+        f << "  <div class=grada_main>\n"
+        f << html_title(opts[:title])
+        f << html_graph
+        f << html_panel
+        f << "  </div>"
+        f << "</body>"
       end
-      
-      false
-    end
+    end 
   end
 end

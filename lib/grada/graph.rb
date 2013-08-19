@@ -1,3 +1,4 @@
+require 'grada/types/default_base'
 require 'grada/types/gnuplot'
 require 'grada/types/histogram'
 require 'grada/types/default'

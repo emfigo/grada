@@ -5,9 +5,11 @@ GraDA
 GraDA is a gem build for making easier the way we build graphs in ruby. GraDA is used mainly for data analysis purposes.
 
 ### Note:
+---------
 #### * Requires `X11` to display the plots
+#### * Files can be saved as HTML but you need firefox to display them.
 #### * Use 'grada' gem. 'GraDA' gem is deprecated. (gem install grada)
-
+--------
 GraDA lets you graph data so you can analyze it. This gem was created for data investigation purposes.
 
 ## Gem Summary
@@ -29,7 +31,7 @@ end
 grada.display
 
 #Saves the default plot into a file.
-grada.save( filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga.png' )
+grada.save( filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga', ext: 'svg' )
 ```
 
 ## Basic Usage
@@ -146,6 +148,6 @@ grada.display( graph_type: :heatmap, title: 'Atomic Device Comparison', x_label:
 * Save plot
 
 ```ruby
-grada.save( filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga', ext: 'svg' ,graph_type: :heatmap, title: 'Atomic Device Comparison', x_label: 'Difference', min: 0, max: 1)
+grada.save( filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga', ext: 'html' ,graph_type: :heatmap, title: 'Atomic Device Comparison', x_label: 'Difference', min: 0, max: 1)
 ```
 

@@ -1,5 +1,5 @@
 module Grada
-  class Histogram
+  class Histogram < DefaultBase
     def self.plot(x, opts, &block)
       Gnuplot.open do
         Gnuplot::Plot.construct do |plot|
@@ -27,5 +27,22 @@ module Grada
         end
       end 
     end
+    
+    def self.plot_html(x, opts)
+      opts[:filename] = create_html_dir(opts[:filename])
+
+      create_grada_json(opts, x)
+
+      File.open("#{opts[:filename]}.html",'w') do |f|
+        f << html_head
+        f << "<body>\n"
+        f << "  <div class=grada_main>\n"
+        f << html_title(opts[:title])
+        f << html_graph
+        f << html_panel
+        f << "  </div>"
+        f << "</body>"
+      end
+    end 
   end
 end
