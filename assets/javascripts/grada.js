@@ -35,7 +35,7 @@ $(function() {
         points: { show: false },
         bars:   { show: true,
                   align: "center",
-                  lineWidth: 0.03
+                  barWidth: 0.03
                 }
       },
       selection: { mode: "xy" }
