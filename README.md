@@ -2,17 +2,33 @@
 
 GraDA
 =====
-GraDA is a gem build for making easier the way we build graphs in ruby. GraDA is used mainly for data analysis purposes.
+GraDA is built for making easier the way you plot in ruby. GraDA is used mainly for data analysis.
 
-### Note:
+#Installation
+
+```ruby
+gem install grada
+```
 ---------
-#### * Requires `X11` to display the plots
-#### * Files can be saved as HTML but you need firefox to display them.
-#### * Use 'grada' gem. 'GraDA' gem is deprecated. (gem install grada)
---------
-GraDA lets you graph data so you can analyze it. This gem was created for data investigation purposes.
+#### IMPORTANT:
 
-## Gem Summary
+##### 'GraDA' gem is deprecated.
+--------
+
+##### NOTE: Requires 'X11' to display the plots
+
+In case you don't have X11
+
+Ubuntu
+
+```bash
+sudo apt-get install gnuplot-x11
+```
+Mac
+
+In case you don't have it, just install xQuartz
+
+#Usage
 
 When you use a `grada` object in your class, you get two basic methods:
 
@@ -79,7 +95,7 @@ grada.save( filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level
 
 Also you can obtain more complex graphs. Here we will explain how to obtain most of them 
 
-### In order to create a default plot with multiple graphs. 
+### MULTIPLE PLOTS IN ONE. 
 
 ```ruby
 class AtomicDevice
@@ -99,7 +115,7 @@ grada.display( title: 'Atomic Device X in 2 cities', x_label: 'Frequency', y_lab
 
 ![Default graph](https://raw.github.com/emfigo/grada/master/assets/images/default_plot.png)
 
-### In order to create a histogram for analyzing the distribution. 
+### HISTOGRAMS 
 
 ```ruby
 class AtomicDevice
@@ -123,7 +139,27 @@ grada.display( graph_type: :histogram, title: 'Atomic Device X', x_label: 'Frequ
 ```ruby
 grada.save( filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga', ext: 'png' ,graph_type: :histogram, title: 'Atomic Device X', x_label: 'Frequency', y_label: 'smSv/day_one' )
 ```
-### In order to create a heatmap for comparing and visualizing data.
+### HTML
+
+##### NOTE: You need firefox or safari to display correctly the plots.
+
+Create an html file is as simple as just saving the file with ext = 'html'. Grada will build a folder with the name that you have specified and inside of it will be the html file. Notice that GraDA builds it this way so it work, if you take out the html file from the folder, no graph will be displayed.
+
+```ruby
+grada.save( filename: 'secret/radiation_levels/ffa/zonex/devicex', ext: 'html' ,title: 'Atomic Device X in 2 cities', x_label: 'Frequency', y_label: 'smSv/day_one' )
+```
+
+![Default graph](https://raw.github.com/emfigo/grada/master/assets/images/default_plot_html.png)
+
+```ruby
+grada.save( filename: 'secret/radiation_levels/ffa/zonex/devicex/radiation_level_malaga', ext: 'html' ,graph_type: :histogram, title: 'Atomic Device X', x_label: 'Frequency', y_label: 'smSv/day_one' )
+```
+
+![Default graph](https://raw.github.com/emfigo/grada/master/assets/images/histogram_html.png)
+
+### HEATMAPS.
+
+##### NOTE: This type of plot can't be saved as an html.
 
 ```ruby
 class AtomicDevice
@@ -135,7 +171,7 @@ class AtomicDevice
 end
 ```
 
-### It is important to specify the min and the max parameters, so you get a reasonable distribution of colors for the heatmap you want
+#### NOTE 2: It is important to specify the min and the max parameters, so you get a reasonable distribution of colors for the heatmap you want
 
 * Just show
 
