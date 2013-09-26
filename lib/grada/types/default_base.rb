@@ -107,7 +107,7 @@ module Grada
         y.each do |dic|
           dic.each do |k, v|
             if ! Grada::STYLES.include?(k.to_sym) && k.to_sym != :with
-              raise NoPlotDataError if ! v.nil? && x.size != v.size
+              raise Grada::Graph::NoPlotDataError if ! v.nil? && x.size != v.size
 
               json << { data: compose_grada_json_data(x, v), label: "#{k}", style: dic[:with] || opts[:with] }
             end
